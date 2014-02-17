@@ -31,8 +31,6 @@ with optional params of:
 And account.json should look like this:
 ```
 {
-	"username" : "derthy",
-	"password" : "Podrimt%",
 	"accountId" : 6136751,
 	"personalAccessToken": "xxx"
 }
