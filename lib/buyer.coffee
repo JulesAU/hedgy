@@ -33,6 +33,9 @@ class Buyer
 			if spreadPips > @options.spreadLimitPips
 				return callback "Offered spread of #{ spreadPips } exceeds our limit of #{ @options.spreadLimitPips }"
 
+			if @options.invertUnits
+				@options.units = Math.round(@options.units / parseFloat(prices.ask))
+
 			callback null
 
 	_openTrade: (callback) =>
@@ -55,10 +58,10 @@ class Buyer
 			result = JSON.parse body
 
 			if result.instrument != @options.currencyPair
-				return callback "Opened order of wrong currency pair " + body
+				throw "Opened order of wrong currency pair " + body
 
 			if result.tradeOpened.units != @options.units
-				return callback "The #{ @options.units } requested units were not filled in order " + body
+				throw "The #{ @options.units } requested units were not filled in order " + body
 
 			callback null, result
 

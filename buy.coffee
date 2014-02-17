@@ -9,6 +9,7 @@ Buyer = require('./lib/buyer').Buyer
 defaults =
 	retries: 3
 	retryDelaySeconds: 1
+	invertUnits: false
 
 for key, val of defaults
 	if not options[key]? then options[key] = val
