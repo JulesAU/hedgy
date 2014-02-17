@@ -6,6 +6,7 @@ Use OANDA Rest API to accumulate positions
 Usage
 =======
 ```
+npm install
 ./buy.coffee  --account ./account.json  --options ./options.json 
 ```
 
