@@ -5,21 +5,19 @@ class Buyer
 	constructor: (@options, @account) ->
 
 	execute: (callback) =>
-		@_verifySpread (error) =>
+		@_verifySpread (error, prices) =>
 			if error
 				callback error
 			else
-				@_openTrade callback
+				@_openTrade prices, callback
 
 	_verifySpread: (callback) =>
-		options = 
+		request_options = 
 			uri: @options.apiEndpoint + "v1/quote?instruments=" + @options.currencyPair
 		
-		if @account.personalAccessToken
-			options.headers = 
-				"Authorization": "Bearer " + @account.personalAccessToken
+		@_addAuthentication request_options
 
-		request options, (error, response, body) =>
+		request request_options, (error, response, body) =>
 			callback error if error
 			if response.statusCode != 200
 				return callback "API error: " + body
@@ -36,20 +34,23 @@ class Buyer
 			if @options.invertUnits
 				@options.units = Math.round(@options.units / parseFloat(prices.ask))
 
-			callback null
+			callback null, prices
 
-	_openTrade: (callback) =>
+	_openTrade: (prices, callback) =>
 		data =
 			instrument: @options.currencyPair
 			units: @options.units
 			side: 'buy'
 			type: "market"
 
-		request
+		request_options =
 			uri: @options.apiEndpoint + "v1/accounts/#{ @account.accountId }/orders"
 			method: "POST"
 			form: data
-		, (error, response, body) =>
+		
+		@_addAuthentication request_options
+
+		request request_options, (error, response, body) =>
 			callback error if error
 
 			if response.statusCode != 200
@@ -63,6 +64,13 @@ class Buyer
 			if result.tradeOpened.units != @options.units
 				throw "The #{ @options.units } requested units were not filled in order " + body
 
+			result.offeredPrices = prices
+			
 			callback null, result
+
+	_addAuthentication: (options) =>
+		if @account.personalAccessToken
+			options.headers = 
+				"Authorization": "Bearer " + @account.personalAccessToken
 
 

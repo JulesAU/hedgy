@@ -16,9 +16,11 @@ for key, val of defaults
 
 attempt = (callback) ->
 	buyer = new Buyer options, account
-	result = buyer.execute (error, result) ->
+	buyer.execute (error, result) ->
 		if not error
-			process.stdout.write "Purchased #{ result.tradeOpened.units } units of #{ result.instrument } @ #{ result.price }\n"
+			spread = Math.round ((result.offeredPrices.ask - result.offeredPrices.bid) * 100000)
+			process.stdout.write "Purchased #{ result.tradeOpened.units } units of #{ result.instrument } \
+			@ #{ result.price } after offer of #{ result.offeredPrices.ask } and spread of #{ spread } \n"
 		callback error, result
 
 
