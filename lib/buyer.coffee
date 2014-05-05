@@ -13,7 +13,7 @@ class Buyer
 
 	_verifySpread: (callback) =>
 		request_options = 
-			uri: @options.apiEndpoint + "v1/quote?instruments=" + @options.currencyPair
+			uri: @options.apiEndpoint + "v1/prices?instruments=" + @options.currencyPair
 		
 		@_addAuthentication request_options
 
