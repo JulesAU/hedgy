@@ -40,7 +40,7 @@ class Buyer
 		data =
 			instrument: @options.currencyPair
 			units: @options.units
-			side: 'buy'
+			side: @options.operation
 			type: "market"
 
 		request_options =

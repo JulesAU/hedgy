@@ -10,6 +10,7 @@ defaults =
 	retries: 3
 	retryDelaySeconds: 1
 	invertUnits: false
+	operation: "buy"
 
 for key, val of defaults
 	if not options[key]? then options[key] = val
